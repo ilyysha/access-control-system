@@ -1,0 +1,30 @@
+# access_control.py
+
+import hashlib
+
+class AccessControl:
+    def __init__(self):
+        self.users = {}
+
+    def hash_password(self, password):
+        return hashlib.sha256(password.encode()).hexdigest()
+
+    def add_user(self, username, password, role):
+        self.users[username] = {"password": self.hash_password(password), "role": role}
+        print(f"User {username} added with role {role}")
+
+    def authenticate(self, username, password):
+        if username in self.users and self.users[username]["password"] == self.hash_password(password):
+            print(f"Authentication successful for {username}")
+            return True
+        else:
+            print(f"Authentication failed for {username}")
+            return False
+
+    def check_access(self, username, password, required_role):
+        if self.authenticate(username, password) and self.users[username]["role"] == required_role:
+            print(f"Access granted to {username}")
+            return True
+        else:
+            print(f"Access denied to {username}")
+            return False
